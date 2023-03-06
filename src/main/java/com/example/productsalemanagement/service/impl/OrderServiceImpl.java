@@ -7,6 +7,7 @@ import com.example.productsalemanagement.entity.Product;
 import com.example.productsalemanagement.entity.User;
 import com.example.productsalemanagement.exception.OutOfStockException;
 import com.example.productsalemanagement.exception.ResourceNotFoundException;
+import com.example.productsalemanagement.repository.OrderDetailRepository;
 import com.example.productsalemanagement.repository.OrderRepository;
 import com.example.productsalemanagement.repository.ProductRepository;
 import com.example.productsalemanagement.repository.UserRepository;
@@ -14,6 +15,7 @@ import com.example.productsalemanagement.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.*;
 
 @Service
@@ -24,6 +26,7 @@ public class OrderServiceImpl implements OrderService {
     private ProductRepository productRepository;
     private OrderRepository orderRepository;
     private UserRepository userRepository;
+    private OrderDetailRepository orderDetailRepository;
 
     @Override
     public List<Order> getListOrderByUser(int userId) {
@@ -35,47 +38,34 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> createOrder(OrderRequestDTO orderRequestDTO, Long userId) {
-        List<Product> productOrderDetailList = new ArrayList<>();
-        orderRequestDTO
-                .getOrderDetailRequestDTOS()
-                .forEach(ordRequest ->
-                        productOrderDetailList
-                                .add(productRepository
-                                        .findById((long) ordRequest.getProductId())
-                                        .orElseThrow(() -> new ResourceNotFoundException("Product not found"))));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found!"));
 
-        orderRequestDTO.getOrderDetailRequestDTOS().forEach(product -> {
-            Product p = productRepository.findById((long) product.getProductId()).get();
-            if (product.getQuantity() > p.getQuantity())
-                throw new OutOfStockException("Product: " + p.getName() + " has not enough entity with " + p.getQuantity() + " left");
+        Order order = orderRepository.save(Order.builder()
+                .address(orderRequestDTO.getAddress())
+                .createdDate(new Date(System.currentTimeMillis()))
+                .user(user)
+                .status(true)
+                .build());
+
+        orderRequestDTO.getOrderDetail().forEach((productId, quantity) -> {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product " + productId + " not found!"));
+
+            if (product.getQuantity() < quantity)
+                throw new OutOfStockException("Product " + product.getName() + " has only " + product.getQuantity() + " left");
+
+            orderDetailRepository.save(OrderDetail.builder()
+                    .quantity(quantity)
+                    .product(product)
+                    .order(order)
+                    .build());
+
+            product.setQuantity(product.getQuantity() - quantity);
+            productRepository.save(product);
         });
 
-        User user = userRepository
-                .findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-
-        Order order = Order.builder()
-                .user(user)
-                .orderAddress(orderRequestDTO.getAddress())
-                .build();
-
-        Set<OrderDetail> orderDetailList = new HashSet<>();
-        orderRequestDTO
-                .getOrderDetailRequestDTOS()
-                .forEach(orderRequest -> {
-                    orderDetailList.add(
-                            OrderDetail.builder()
-                                    .order(order)
-                                    .product(productRepository
-                                            .findById((long) orderRequest.getProductId()).get())
-                                    .quantity(orderRequest.getQuantity())
-                                    .build());
-                });
-
-
-        order.setOrderDetails(orderDetailList);
-        orderRepository.save(order);
+        userRepository.save(user);
 
         return getListOrderByUser(Math.toIntExact(userId));
     }

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -14,5 +16,7 @@ import java.util.Set;
 public class OrderRequestDTO {
     private Date createdDate;
     private String address;
-    private Set<OrderDetailRequestDTO> orderDetailRequestDTOS;
+
+                //product id // quantity
+    private HashMap<Long, Integer> orderDetail;
 }

@@ -37,8 +37,6 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> category = categoryRepository.findById(id);
         category.orElseThrow(() -> new ResourceNotFoundException());
 
-        System.out.println("product with category: " + productRepository.findByCategory_Id(category.get().getId()));
-
         if(productRepository.findByCategory_Id(category.get().getId()).size() > 0)
             throw new ConstraintViolationException("Still have product belong to this category");
 

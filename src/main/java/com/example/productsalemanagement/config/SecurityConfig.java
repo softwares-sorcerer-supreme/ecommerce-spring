@@ -27,8 +27,8 @@ public class SecurityConfig {
                                 .ignoringAntMatchers("/h2-console/**"))
                 .authorizeRequests(auth ->
                         auth
-                                .antMatchers("/h2-console/**").permitAll()
-                                .antMatchers("/products/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER"))
+                                .antMatchers("/**").permitAll()
+                )
                 .formLogin(form -> form.permitAll())
                 .logout(logout -> logout.permitAll())
 //                .userDetailsService(userDetailService)

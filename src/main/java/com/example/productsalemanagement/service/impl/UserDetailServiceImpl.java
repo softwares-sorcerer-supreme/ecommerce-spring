@@ -21,6 +21,5 @@ public class UserDetailServiceImpl implements UserDetailsService {
         return userRepository.findByUserName(username)
                 .map(SecurityUser::new)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found user"));
-
     }
 }

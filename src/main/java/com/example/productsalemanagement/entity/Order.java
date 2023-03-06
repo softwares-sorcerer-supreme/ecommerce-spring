@@ -10,6 +10,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "orders")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order implements Serializable {
 
     @Id
@@ -33,17 +36,6 @@ public class Order implements Serializable {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private Set<OrderDetail> orderDetails;
-
-    @Builder
-    public Order(String orderAddress, User user) {
-        this.createdDate = new Date(System.currentTimeMillis());
-        this.address = orderAddress;
-        this.user = user;
-        this.status = true;
-    }
-
-    public Order() {
-    }
 
     public Long getId() {
         return id;
