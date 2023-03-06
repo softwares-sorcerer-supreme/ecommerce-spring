@@ -21,7 +21,6 @@ public class OrderDetail implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
-    @JsonIgnore
     private Order order;
 
     @Column(name = "quantity")

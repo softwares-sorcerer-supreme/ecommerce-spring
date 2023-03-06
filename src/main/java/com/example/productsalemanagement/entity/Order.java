@@ -34,8 +34,13 @@ public class Order implements Serializable {
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order")
     private Set<OrderDetail> orderDetails;
+
+    public Order(String address, User user) {
+        this.address = address;
+        this.user = user;
+    }
 
     public Long getId() {
         return id;

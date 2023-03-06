@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements Serializable {
 
     @Id
@@ -44,9 +46,6 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "user")
     private Set<Order> orders;
-
-    public User() {
-    }
 
     public User(String userName, String password, String fullName, String address, String phone, String email, boolean enabled, Role role) {
         this.userName = userName;

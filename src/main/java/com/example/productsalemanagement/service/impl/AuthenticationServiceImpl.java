@@ -49,7 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new BadRequestException("Email has been existed!");
         });
 
-        Role role = roleRepository.findById(1).get();
+        Role role = roleRepository.findById("USER").get();
 
         User user = User.builder()
                 .userName(signupRequest.getUserName())
