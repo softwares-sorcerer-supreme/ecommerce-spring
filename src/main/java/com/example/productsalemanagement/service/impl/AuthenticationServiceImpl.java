@@ -41,6 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return UserResponse.builder()
                 .id(user.getId())
                 .userName(user.getUserName())
+                .password(user.getPassword())
                 .email(user.getEmail())
                 .cartId(user.getCart().getId())
                 .role(user.getRole().getId())
