@@ -34,8 +34,9 @@ public class ProductSaleManagementApplication {
             Role role_user = roleRepository.save(new Role("USER", "ROLE_USER"));
 
             Cart cart = cartRepository.save(new Cart());
+            Cart cartAdmin = cartRepository.save(new Cart());
 
-            User admin = userRepository.save(new User("haih", "123", "Manh Hai", "PN", "0123123123", "hai@gmail.com", true, role_admin, null));
+            User admin = userRepository.save(new User("haih", "123", "Manh Hai", "PN", "0123123123", "hai@gmail.com", true, role_admin, cartAdmin));
             User user = userRepository.save(new User("thain", "123", "Minh Thai", "Q9", "0123123123", "thai@gmail.com", true, role_user, cart));
 
 //            Order order = orderRepository.save(new Order("PN", user));

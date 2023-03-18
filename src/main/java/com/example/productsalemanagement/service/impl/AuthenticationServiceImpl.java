@@ -38,6 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!password.equals(user.getPassword()))
             throw new BadRequestException("Username or password is invalid not found!");
 
+
         return UserResponse.builder()
                 .id(user.getId())
                 .userName(user.getUserName())
