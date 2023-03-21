@@ -6,11 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 public interface ProductService {
 //    Product saveProduct(ProductRequestDto productRequestDto);
 
-    List<Product> getAllProducts();
+    List<Product> getAllProducts(Long cartId, String firebaseToken) throws ExecutionException, InterruptedException;
     Optional<Product> getProduct(Long id);
 
     List<Product> addProduct(ProductRequestDto product);

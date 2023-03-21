@@ -1,9 +1,11 @@
 package com.example.productsalemanagement.service.impl;
 
 import com.example.productsalemanagement.dto.request.ProductRequestDto;
+import com.example.productsalemanagement.entity.Cart;
 import com.example.productsalemanagement.entity.Category;
 import com.example.productsalemanagement.entity.Product;
 import com.example.productsalemanagement.exception.ResourceNotFoundException;
+import com.example.productsalemanagement.repository.CartRepository;
 import com.example.productsalemanagement.repository.CategoryRepository;
 import com.example.productsalemanagement.repository.ProductRepository;
 import com.example.productsalemanagement.service.ProductService;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -22,6 +25,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private FCMServiceImpl fcmService;
+    @Autowired
+    private CartRepository cartRepository;
 
 
 //    @Override
@@ -31,7 +38,14 @@ public class ProductServiceImpl implements ProductService {
 //        return productRepository.save(product);
 //    }
 
-    public List<Product> getAllProducts() {
+    public List<Product> getAllProducts(Long cartId, String firebaseToken) throws ExecutionException, InterruptedException {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found cart!"));
+
+        if(cart.getCartProducts().size() > 0) {
+            fcmService.sendMessageToToken("Cart", "Your Product still in the Cart\nBuy now!!", firebaseToken);
+        }
+
         return productRepository.findAll();
     }
 
@@ -61,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(saveProduct);
         System.out.println("saved");
 
-        return getAllProducts();
+        return productRepository.findAll();
     }
 
     @Override
@@ -69,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> product = Optional.ofNullable(productRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Product not exist with id: " + id)));
         productRepository.delete(product.get());
-        return getAllProducts();
+        return productRepository.findAll();
     }
 
     @Override

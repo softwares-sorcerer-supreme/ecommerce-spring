@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/product")
@@ -20,8 +21,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> listProducts() {
-        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
+    public ResponseEntity<List<Product>> listProducts(@RequestParam Long cartId, @RequestParam String firebaseToken) throws ExecutionException, InterruptedException {
+        return new ResponseEntity<>(productService.getAllProducts(cartId, firebaseToken), HttpStatus.OK);
     }
 
     @GetMapping("/category/{id}")
