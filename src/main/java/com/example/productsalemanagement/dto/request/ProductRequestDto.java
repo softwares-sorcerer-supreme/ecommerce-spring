@@ -18,7 +18,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductRequestDto implements Serializable {
-    private Long id;
     @NotNull(message = "Product Name can not empty")
     private String name;
     private String description;

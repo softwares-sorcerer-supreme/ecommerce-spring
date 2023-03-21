@@ -1,13 +1,16 @@
 package com.example.productsalemanagement.service;
 
 
-import com.example.productsalemanagement.dto.request.OrderRequestDTO;
-import com.example.productsalemanagement.entity.Order;
+import com.example.productsalemanagement.dto.response.OrderDetailResponse;
+import com.example.productsalemanagement.dto.response.OrderResponse;
+import com.example.productsalemanagement.dto.response.SuccessResponse;
 
 import java.util.List;
 
 public interface OrderService {
-    List<Order> getListOrderByUser(int userId);
+    List<OrderResponse> getListOrderByUser(Long userId);
 
-    List<Order> createOrder(OrderRequestDTO orderRequestDTO, Long userId);
+    SuccessResponse createOrder(Long cartId, Long userId, String address);
+
+    OrderDetailResponse getOrderDetailByOrderId(Long userId, Long orderId);
 }

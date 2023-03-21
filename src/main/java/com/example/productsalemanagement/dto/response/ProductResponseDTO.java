@@ -21,7 +21,10 @@ public class ProductResponseDTO {
     private String image;
     private double price;
     private int quantity;
-    private Date expiredDate;
+    private Date importDate;
+    private int expiredDate;
     private boolean enabled;
+    private String origin;
     private Category category;
+    private int orderQuantity;
 }

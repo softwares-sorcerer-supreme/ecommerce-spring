@@ -73,22 +73,25 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(ProductRequestDto productRequestDto) {
-        System.out.println("update product");
-        Optional<Product> product = Optional.ofNullable(productRepository.findById(productRequestDto.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Product not exist")));
+    public Product updateProduct(Long id, ProductRequestDto productRequestDto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not exist"));
 
-        product.get().setName((productRequestDto.getName()));
-        product.get().setDescription(productRequestDto.getDescription());
-        product.get().setImage(productRequestDto.getImage());
-        product.get().setPrice(productRequestDto.getPrice());
-        product.get().setQuantity(productRequestDto.getQuantity());
-        product.get().setEnabled(productRequestDto.isEnabled());
-        System.out.println(product);
-        Product savedProduct = productRepository.save(product.get());
-        System.out.println("saved");
+        product.setName((productRequestDto.getName()));
+        product.setDescription(productRequestDto.getDescription());
+        product.setImage(productRequestDto.getImage());
+        product.setPrice(productRequestDto.getPrice());
+        product.setQuantity(productRequestDto.getQuantity());
+        product.setEnabled(productRequestDto.isEnabled());
+
+        Product savedProduct = productRepository.save(product);
 
         return savedProduct;
+    }
+
+    @Override
+    public List<Product> getAllProductsByCategory(int id) {
+        return productRepository.findByCategory_Id(id);
     }
 
 

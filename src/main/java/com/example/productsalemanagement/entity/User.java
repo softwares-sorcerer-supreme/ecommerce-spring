@@ -1,5 +1,6 @@
 package com.example.productsalemanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,6 +11,8 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements Serializable {
@@ -45,9 +48,14 @@ public class User implements Serializable {
     private Role role;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<Order> orders;
 
-    public User(String userName, String password, String fullName, String address, String phone, String email, boolean enabled, Role role) {
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
+    public User(String userName, String password, String fullName, String address, String phone, String email, boolean enabled, Role role, Cart cart) {
         this.userName = userName;
         this.password = password;
         this.fullName = fullName;
@@ -56,85 +64,8 @@ public class User implements Serializable {
         this.email = email;
         this.enabled = enabled;
         this.role = role;
+        this.cart = cart;
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Set<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
-    }
 }

@@ -11,6 +11,8 @@ import java.util.Set;
 @Entity
 @Table(name = "orders")
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order implements Serializable {
@@ -26,8 +28,14 @@ public class Order implements Serializable {
     @Column(name = "address", nullable = false)
     private String address;
 
+    @Column(name = "message")
+    private String message;
+
     @Column(name = "status")
     private boolean status;
+
+    @Column(name = "code", unique = true)
+    private String code;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -37,56 +45,4 @@ public class Order implements Serializable {
     @OneToMany(mappedBy = "order")
     private Set<OrderDetail> orderDetails;
 
-    public Order(String address, User user) {
-        this.address = address;
-        this.user = user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Set<OrderDetail> getOrderDetails() {
-        return orderDetails;
-    }
-
-    public void setOrderDetails(Set<OrderDetail> orderDetails) {
-        this.orderDetails = orderDetails;
-    }
-}
+  }
